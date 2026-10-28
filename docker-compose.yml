@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-merkle}
+      POSTGRES_USER: ${POSTGRES_USER:-merkle_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+  backend:
+    build: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_HOST: db
+      DB_NAME: ${POSTGRES_DB:-merkle}
+      DB_USER: ${POSTGRES_USER:-merkle_app}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_SECURITY_ENABLED: ${APP_SECURITY_ENABLED:-true}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:?set APP_ADMIN_PASSWORD in .env}
+      APP_CHECKPOINT_KEY: ${APP_CHECKPOINT_KEY:?set APP_CHECKPOINT_KEY in .env}
+      APP_DEMO_MODE: ${APP_DEMO_MODE:-false}
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["8080:8080"]

@@ -1,0 +1,22 @@
+spring:
+  application: { name: merkle-sentinel }
+  datasource: { url: jdbc:h2:mem:merkle;MODE=PostgreSQL;DB_CLOSE_DELAY=-1, username: sa, password: "" }
+  jpa: { hibernate: { ddl-auto: validate }, open-in-view: false }
+  flyway: { enabled: true }
+  servlet: { multipart: { max-file-size: 2MB, max-request-size: 2MB } }
+management: { endpoints: { web: { exposure: { include: health,info } } }, endpoint: { health: { show-details: never } } }
+app:
+  security-enabled: ${APP_SECURITY_ENABLED:false}
+  admin-password: ${APP_ADMIN_PASSWORD:}
+  demo-mode: ${APP_DEMO_MODE:true}
+  checkpoint-key: ${APP_CHECKPOINT_KEY:development-only-key-change-me}
+---
+spring:
+  config: { activate: { on-profile: postgres } }
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:merkle}
+    username: ${DB_USER:merkle_app}
+    password: ${DB_PASSWORD}
+app:
+  security-enabled: "${APP_SECURITY_ENABLED:true}"
+  demo-mode: "${APP_DEMO_MODE:false}"

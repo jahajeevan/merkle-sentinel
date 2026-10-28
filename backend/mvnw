@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+base="$(cd "$(dirname "$0")" && pwd)"; mvn_dir="$base/.maven/apache-maven-3.9.11"
+cd "$base"
+if command -v mvn >/dev/null; then exec mvn "$@"; fi
+if [ ! -x "$mvn_dir/bin/mvn" ]; then
+  mkdir -p "$base/.maven"; archive="$base/.maven/maven.tgz"
+  curl -fsSL "https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz" -o "$archive"
+  tar -xzf "$archive" -C "$base/.maven"; rm -f "$archive"
+fi
+exec "$mvn_dir/bin/mvn" "$@"

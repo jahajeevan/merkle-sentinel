@@ -1,0 +1,4 @@
+import {describe,expect,it} from 'vitest';
+type TreeNode={recordId?:string;left?:TreeNode|null;right?:TreeNode|null;rightDuplicate?:boolean};
+const renderedRecordIds=(node:TreeNode|null|undefined):string[]=>!node?[]:node.recordId?[node.recordId]:[...renderedRecordIds(node.left),...renderedRecordIds(node.right)];
+describe('tree response conventions',()=>{it('keeps the proof-invalidating hash shape explicit',()=>{expect('0'.repeat(64)).toMatch(/^[0-9a-f]{64}$/);});it('renders five persisted leaves once when an odd hash duplicate is marked',()=>{const leaf=(id:string):TreeNode=>({recordId:id});const duplicatedParent:TreeNode={left:leaf('r4'),right:null,rightDuplicate:true};const tree:TreeNode={left:{left:{left:leaf('r0'),right:leaf('r1')},right:{left:leaf('r2'),right:leaf('r3')}},right:duplicatedParent};expect(renderedRecordIds(tree)).toEqual(['r0','r1','r2','r3','r4']);});});

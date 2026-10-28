@@ -1,0 +1,2 @@
+package edu.casestudy.merkle.core;
+public final class ProofVerifier { private ProofVerifier(){} public static boolean verify(String leaf, MerkleProof proof, String root){try{byte[] h=HashUtils.unhex(leaf);for(var s:proof.steps()){byte[] x=HashUtils.unhex(s.siblingHash());h=s.siblingOnLeft()?HashUtils.parent(x,h):HashUtils.parent(h,x);}return HashUtils.hex(h).equalsIgnoreCase(root);}catch(RuntimeException e){return false;}} }

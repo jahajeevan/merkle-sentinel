@@ -1,0 +1,3 @@
+package edu.casestudy.merkle.core;
+import java.io.*; import java.nio.charset.StandardCharsets; import java.text.Normalizer; import java.util.UUID;
+public final class RecordCanonicalizer { private RecordCanonicalizer(){} public static byte[] canonical(UUID id,long position,String payload){try{var out=new ByteArrayOutputStream();var d=new DataOutputStream(out); write(d,id.toString());d.writeLong(position);write(d,payload);d.flush();return out.toByteArray();}catch(IOException e){throw new IllegalStateException(e);}} private static void write(DataOutputStream d,String s)throws IOException{if(s==null){d.writeInt(-1);return;}byte[] b=Normalizer.normalize(s,Normalizer.Form.NFC).getBytes(StandardCharsets.UTF_8);d.writeInt(b.length);d.write(b);} }

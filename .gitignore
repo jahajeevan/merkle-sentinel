@@ -1,0 +1,22 @@
+# Java / Maven
+backend/target/
+backend/.mvn/
+backend/.maven/
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+
+# Local development state and secrets
+.env
+.env.*
+!.env.example
+*.log
+data/
+
+# IDE and operating-system files
+.DS_Store
+.idea/
+.vscode/
+*.iml
